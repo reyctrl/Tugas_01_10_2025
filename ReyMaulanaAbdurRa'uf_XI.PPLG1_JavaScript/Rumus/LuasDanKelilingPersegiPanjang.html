@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menggambar Persegi Panjang</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .container {
+      position: relative;
+      display: inline-block;
+      margin: 20px auto;
+    }
+
+    canvas {
+      border: 1px solid #444;
+      background: #fff;
+    }
+
+    .input-panjang {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .input-lebar {
+      position: absolute;
+      top: 50%;
+      left: -120px;
+      transform: translateY(-50%);
+    }
+
+    input[type="text"] {
+      padding: 5px;
+      width: 100px;
+      text-align: center;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+    }
+
+    .btn-group {
+      margin-top: 20px;
+    }
+
+    input[type="button"] {
+      margin: 5px;
+      padding: 7px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    input[type="button"]:hover {
+      background-color: #0056b3;
+    }
+
+    .hasil {
+      margin-top: 20px;
+    }
+
+    .hasil input {
+      margin: 5px;
+      border: none;
+      background: #eee;
+      border-radius: 4px;
+      padding: 5px;
+      width: 120px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Menghitung Luas & Keliling Persegi Panjang</h2>
+
+  <div class="container">
+    <canvas id="myCanvas" width="400" height="300"></canvas>
+
+    <input type="text" id="panjang" class="input-panjang" placeholder="Panjang">
+    <input type="text" id="lebar" class="input-lebar" placeholder="Lebar">
+  </div>
+
+  <div class="btn-group">
+    <input type="button" value="Hitung & Gambar" onclick="hitungDanGambar()">
+  </div>
+
+  <div class="hasil">
+    <p>
+      Luas: <input type="text" id="luas" disabled>
+      Keliling: <input type="text" id="keliling" disabled>
+    </p>
+  </div>
+
+  <script>
+    function hitungDanGambar() {
+      var panjang = parseFloat(document.getElementById("panjang").value);
+      var lebar = parseFloat(document.getElementById("lebar").value);
+
+      if (isNaN(panjang) || isNaN(lebar)) {
+        alert("Isi panjang dan lebar dengan angka!");
+        return;
+      }
+
+      var luas = panjang * lebar;
+      var keliling = 2 * (panjang + lebar);
+
+      document.getElementById("luas").value = luas;
+      document.getElementById("keliling").value = keliling;
+
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      var scale = Math.min((canvas.width - 40) / panjang, (canvas.height - 40) / lebar);
+
+      var kotakWidth = panjang * scale;
+      var kotakHeight = lebar * scale;
+
+      var startX = (canvas.width - kotakWidth) / 2;
+      var startY = (canvas.height - kotakHeight) / 2;
+
+      ctx.fillStyle = "#007BFF";
+      ctx.fillRect(startX, startY, kotakWidth, kotakHeight);
+
+      ctx.strokeStyle = "#000";
+      ctx.strokeRect(startX, startY, kotakWidth, kotakHeight);
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Luas: " + luas, startX + kotakWidth / 2, startY + kotakHeight / 2 - 10);
+      ctx.fillText("Keliling: " + keliling, startX + kotakWidth / 2, startY + kotakHeight / 2 + 20);
+    }
+  </script>
+</body>
+</html>

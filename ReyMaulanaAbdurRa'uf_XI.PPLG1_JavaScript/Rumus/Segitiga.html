@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menggambar Segitiga</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .container {
+      position: relative;
+      display: inline-block;
+      margin: 20px auto;
+    }
+
+    canvas {
+      border: 1px solid #444;
+      background: #fff;
+    }
+
+    .input-alas {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .input-tinggi {
+      position: absolute;
+      top: 50%;
+      left: -120px;
+      transform: translateY(-50%);
+    }
+
+    input[type="text"] {
+      padding: 5px;
+      width: 100px;
+      text-align: center;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+    }
+
+    .btn-group {
+      margin-top: 20px;
+    }
+
+    input[type="button"] {
+      margin: 5px;
+      padding: 7px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    input[type="button"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Menghitung Luas & Keliling Segitiga Sama Kaki</h2>
+
+  <div class="container">
+    <canvas id="myCanvas" width="400" height="300"></canvas>
+
+    <input type="text" id="alas" class="input-alas" placeholder="Alas">
+    <input type="text" id="tinggi" class="input-tinggi" placeholder="Tinggi">
+  </div>
+
+  <div class="btn-group">
+    <input type="button" value="Hitung & Gambar" onclick="hitungDanGambar()">
+  </div>
+
+  <script>
+    function hitungDanGambar() {
+      var alas = parseFloat(document.getElementById("alas").value);
+      var tinggi = parseFloat(document.getElementById("tinggi").value);
+
+      if (isNaN(alas) || isNaN(tinggi)) {
+        alert("Isi alas dan tinggi dengan angka!");
+        return;
+      }
+
+      var luas = 0.5 * alas * tinggi;
+      var sisiMiring = Math.sqrt(Math.pow(alas / 2, 2) + Math.pow(tinggi, 2));
+      var keliling = alas + 2 * sisiMiring;
+
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      var scale = Math.min((canvas.width - 40) / alas, (canvas.height - 40) / tinggi);
+      var alasScaled = alas * scale;
+      var tinggiScaled = tinggi * scale;
+
+      var startX = (canvas.width - alasScaled) / 2;
+      var startY = (canvas.height + tinggiScaled) / 2;
+
+      ctx.beginPath();
+      ctx.moveTo(startX, startY); 
+      ctx.lineTo(startX + alasScaled, startY); 
+      ctx.lineTo(startX + alasScaled / 2, startY - tinggiScaled); 
+      ctx.closePath();
+
+      ctx.fillStyle = "#007BFF";
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Luas: " + luas.toFixed(2), canvas.width / 2, canvas.height / 2 - 10);
+      ctx.fillText("Keliling: " + keliling.toFixed(2), canvas.width / 2, canvas.height / 2 + 15);
+    }
+  </script>
+</body>
+</html>

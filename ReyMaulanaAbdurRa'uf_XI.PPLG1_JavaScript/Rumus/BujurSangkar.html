@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menggambar Bujursangkar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h2 { color: #333; }
+
+    .container { position: relative; display: inline-block; margin: 20px auto; }
+
+    canvas {
+      border: 1px solid #444;
+      background: #fff;
+    }
+
+    .input-sisi {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    input[type="text"] {
+      padding: 5px;
+      width: 100px;
+      text-align: center;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+    }
+
+    .btn-group { margin-top: 20px; }
+
+    input[type="button"] {
+      margin: 5px;
+      padding: 7px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    input[type="button"]:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <h2>Menghitung Luas & Keliling Bujursangkar</h2>
+
+  <div class="container">
+    <canvas id="myCanvas" width="400" height="300"></canvas>
+    <input type="text" id="sisi" class="input-sisi" placeholder="Sisi">
+  </div>
+
+  <div class="btn-group">
+    <input type="button" value="Hitung & Gambar" onclick="hitungDanGambar()">
+  </div>
+
+  <script>
+    function hitungDanGambar() {
+      var sisi = parseFloat(document.getElementById("sisi").value);
+      if (isNaN(sisi)) { alert("Isi sisi dengan angka!"); return; }
+
+      var luas = sisi * sisi;
+      var keliling = 4 * sisi;
+
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      var scale = Math.min((canvas.width - 40) / sisi, (canvas.height - 40) / sisi);
+      var kotak = sisi * scale;
+      var startX = (canvas.width - kotak) / 2;
+      var startY = (canvas.height - kotak) / 2;
+
+      ctx.fillStyle = "#007BFF";
+      ctx.fillRect(startX, startY, kotak, kotak);
+      ctx.strokeStyle = "#000";
+      ctx.strokeRect(startX, startY, kotak, kotak);
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Luas: " + luas, startX + kotak / 2, startY + kotak / 2 - 10);
+      ctx.fillText("Keliling: " + keliling, startX + kotak / 2, startY + kotak / 2 + 20);
+    }
+  </script>
+</body>
+</html>

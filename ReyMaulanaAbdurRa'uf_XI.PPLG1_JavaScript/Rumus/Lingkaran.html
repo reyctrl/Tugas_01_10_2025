@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menggambar Lingkaran</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .container {
+      display: inline-block;
+      margin: 20px auto;
+    }
+
+    canvas {
+      border: 1px solid #444;
+      background: #fff;
+      border-radius: 10px;
+    }
+
+    .input-jari {
+      margin-top: 15px;
+    }
+
+    input[type="text"] {
+      padding: 6px;
+      width: 120px;
+      text-align: center;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+    }
+
+    .btn-group {
+      margin-top: 20px;
+    }
+
+    input[type="button"] {
+      padding: 8px 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    input[type="button"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Menghitung Luas & Keliling Lingkaran</h2>
+
+  <div class="container">
+    <canvas id="myCanvas" width="400" height="300"></canvas>
+    <div class="input-jari">
+      <input type="text" id="jari" placeholder="Jari-jari">
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <input type="button" value="Hitung & Gambar" onclick="hitungDanGambar()">
+  </div>
+
+  <script>
+    function hitungDanGambar() {
+      var r = parseFloat(document.getElementById("jari").value);
+
+      if (isNaN(r)) {
+        alert("Isi jari-jari dengan angka!");
+        return;
+      }
+
+      // Hitung luas dan keliling
+      var luas = Math.PI * r * r;
+      var keliling = 2 * Math.PI * r;
+
+      // Gambar lingkaran
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Skala agar lingkaran muat di canvas
+      var radius = Math.min((canvas.width - 40), (canvas.height - 40)) / 2;
+      var scale = radius / r;
+
+      var x = canvas.width / 2;
+      var y = canvas.height / 2;
+      var rScaled = r * scale;
+
+      // Gambar lingkaran
+      ctx.beginPath();
+      ctx.arc(x, y, rScaled, 0, 2 * Math.PI);
+      ctx.fillStyle = "#007BFF";
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.stroke();
+
+      // Tulis luas dan keliling di tengah lingkaran
+      ctx.fillStyle = "#fff";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Luas: " + luas.toFixed(2), x, y - 10);
+      ctx.fillText("Keliling: " + keliling.toFixed(2), x, y + 15);
+    }
+  </script>
+</body>
+</html>

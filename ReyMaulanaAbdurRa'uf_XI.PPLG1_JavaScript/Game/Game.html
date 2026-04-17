@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Pusat Game Flex</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        text-align: center;
+        margin: 0;
+        padding: 30px;
+    }
+    .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 500px;
+        margin: auto;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .menu {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+        gap: 10px;
+    }
+    .menu button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background-color: blue;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .menu button:hover {
+        background-color: darkblue;
+    }
+    .hidden {
+        display: none;
+    }
+    input, .game button {
+        padding: 8px;
+        margin: 6px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .game button {
+        background: blue;
+        color: white;
+        cursor: pointer;
+    }
+    .game button:hover {
+        background: darkblue;
+    }
+    .message {
+        margin-top: 12px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>🎮 Pusat Game</h2>
+
+        <!-- MENU FLEX -->
+        <div class="menu">
+            <button onclick="tampilkanGame('angka')">🎯 Tebak Angka</button>
+            <button onclick="tampilkanGame('bgr')">✂️ Batu Gunting Kertas</button>
+            <button onclick="tampilkanGame('quiz')">❓ Quiz</button>
+        </div>
+
+        <!-- GAME TEBAK ANGKA -->
+        <div id="gameAngka" class="game hidden">
+            <h3>Tebak Angka</h3>
+            <input type="number" id="tebakan" placeholder="Masukkan angka" />
+            <br>
+            <button onclick="cekTebakan()">Tebak</button>
+            <button onclick="resetGame()">Reset</button>
+            <p class="message" id="pesan"></p>
+            <p>Jumlah percobaan: <span id="percobaan">0</span></p>
+        </div>
+
+        <!-- GAME BATU GUNTING KERTAS -->
+        <div id="gameBGR" class="game hidden">
+            <h3>Batu Gunting Kertas</h3>
+            <button onclick="mainBGR('batu')">🪨 Batu</button>
+            <button onclick="mainBGR('gunting')">✂️ Gunting</button>
+            <button onclick="mainBGR('kertas')">📄 Kertas</button>
+            <p class="message" id="hasilBGR"></p>
+        </div>
+
+        <!-- GAME QUIZ -->
+        <div id="gameQuiz" class="game hidden">
+            <h3>Quiz</h3>
+            <p id="soal"></p>
+            <button id="opsiA" onclick="jawabQuiz('a')"></button><br>
+            <button id="opsiB" onclick="jawabQuiz('b')"></button><br>
+            <button id="opsiC" onclick="jawabQuiz('c')"></button>
+            <p class="message" id="hasilQuiz"></p>
+            <p id="skorQuiz"></p>
+        </div>
+    </div>
+
+<script>
+    // === SWITCH GAME ===
+    function tampilkanGame(namaGame) {
+        document.getElementById("gameAngka").classList.add("hidden");
+        document.getElementById("gameBGR").classList.add("hidden");
+        document.getElementById("gameQuiz").classList.add("hidden");
+
+        if (namaGame === "angka") {
+            document.getElementById("gameAngka").classList.remove("hidden");
+        } else if (namaGame === "bgr") {
+            document.getElementById("gameBGR").classList.remove("hidden");
+        } else if (namaGame === "quiz") {
+            document.getElementById("gameQuiz").classList.remove("hidden");
+            // Reset quiz
+            indeksSoal = 0;
+            skor = 0;
+            document.getElementById("opsiA").style.display = "";
+            document.getElementById("opsiB").style.display = "";
+            document.getElementById("opsiC").style.display = "";
+            tampilkanSoal();
+        }
+    }
+
+    // === GAME TEBAK ANGKA ===
+    let angkaAcak = Math.floor(Math.random() * 100) + 1;
+    let percobaan = 0;
+
+    function cekTebakan() {
+        const input = document.getElementById("tebakan").value;
+        const pesan = document.getElementById("pesan");
+        percobaan++;
+        document.getElementById("percobaan").textContent = percobaan;
+
+        if (input == angkaAcak) {
+            pesan.textContent = "🎉 Benar! Angkanya adalah " + angkaAcak;
+            pesan.style.color = "green";
+        } else if (input < angkaAcak) {
+            pesan.textContent = "Terlalu kecil!";
+            pesan.style.color = "orange";
+        } else if (input > angkaAcak) {
+            pesan.textContent = "Terlalu besar!";
+            pesan.style.color = "orange";
+        } else {
+            pesan.textContent = "Masukkan angka yang valid!";
+            pesan.style.color = "red";
+        }
+    }
+
+    function resetGame() {
+        angkaAcak = Math.floor(Math.random() * 100) + 1;
+        percobaan = 0;
+        document.getElementById("percobaan").textContent = percobaan;
+        document.getElementById("pesan").textContent = "";
+        document.getElementById("tebakan").value = "";
+    }
+
+    // === GAME BATU GUNTING KERTAS ===
+    function mainBGR(pilihanUser) {
+        const pilihanKomputer = ["batu", "gunting", "kertas"][Math.floor(Math.random() * 3)];
+        let hasil = "";
+
+        if (pilihanUser === pilihanKomputer) {
+            hasil = "Seri! Kamu pilih " + pilihanUser + " & Komputer pilih " + pilihanKomputer;
+        } else if (
+            (pilihanUser === "batu" && pilihanKomputer === "gunting") ||
+            (pilihanUser === "gunting" && pilihanKomputer === "kertas") ||
+            (pilihanUser === "kertas" && pilihanKomputer === "batu")
+        ) {
+            hasil = "🎉 Kamu Menang! Kamu pilih " + pilihanUser + " & Komputer pilih " + pilihanKomputer;
+        } else {
+            hasil = "😢 Kamu Kalah! Kamu pilih " + pilihanUser + " & Komputer pilih " + pilihanKomputer;
+        }
+
+        document.getElementById("hasilBGR").textContent = hasil;
+    }
+
+    // === GAME QUIZ MULTI SOAL ===
+    const daftarSoal = [
+        {
+            soal: "Siapakah proklamator kemerdekaan Indonesia?",
+            opsi: {
+                a: "Soekarno - Hatta",
+                b: "Jokowi - Ma’ruf",
+                c: "BJ Habibie"
+            },
+            jawaban: "a"
+        },
+        {
+            soal: "Ibukota negara Indonesia adalah?",
+            opsi: {
+                a: "Bandung",
+                b: "Jakarta",
+                c: "Surabaya"
+            },
+            jawaban: "b"
+        },
+        {
+            soal: "Pulau terbesar di Indonesia adalah?",
+            opsi: {
+                a: "Sumatera",
+                b: "Jawa",
+                c: "Kalimantan"
+            },
+            jawaban: "c"
+        }
+    ];
+
+    let indeksSoal = 0;
+    let skor = 0;
+
+    function tampilkanSoal() {
+        if (indeksSoal < daftarSoal.length) {
+            const s = daftarSoal[indeksSoal];
+            document.getElementById("soal").textContent = s.soal;
+            document.getElementById("opsiA").textContent = "a. " + s.opsi.a;
+            document.getElementById("opsiB").textContent = "b. " + s.opsi.b;
+            document.getElementById("opsiC").textContent = "c. " + s.opsi.c;
+            document.getElementById("hasilQuiz").textContent = "";
+            document.getElementById("skorQuiz").textContent = "";
+        } else {
+            document.getElementById("soal").textContent = "Quiz selesai!";
+            document.getElementById("opsiA").style.display = "none";
+            document.getElementById("opsiB").style.display = "none";
+            document.getElementById("opsiC").style.display = "none";
+            document.getElementById("hasilQuiz").textContent = "";
+            document.getElementById("skorQuiz").textContent = "Nilai akhir kamu: " + skor + " dari " + daftarSoal.length;
+        }
+    }
+
+    function jawabQuiz(jawaban) {
+        if (indeksSoal >= daftarSoal.length) return;
+        const hasil = document.getElementById("hasilQuiz");
+        if (jawaban === daftarSoal[indeksSoal].jawaban) {
+            hasil.textContent = "✅ Benar!";
+            hasil.style.color = "green";
+            skor++;
+        } else {
+            hasil.textContent = "❌ Salah!";
+            hasil.style.color = "red";
+        }
+        indeksSoal++;
+        setTimeout(tampilkanSoal, 1000);
+    }
+
+    // Reset quiz setiap kali menu quiz dibuka
+    function tampilkanGame(namaGame) {
+        document.getElementById("gameAngka").classList.add("hidden");
+        document.getElementById("gameBGR").classList.add("hidden");
+        document.getElementById("gameQuiz").classList.add("hidden");
+
+        if (namaGame === "angka") {
+            document.getElementById("gameAngka").classList.remove("hidden");
+        } else if (namaGame === "bgr") {
+            document.getElementById("gameBGR").classList.remove("hidden");
+        } else if (namaGame === "quiz") {
+            document.getElementById("gameQuiz").classList.remove("hidden");
+            // Reset quiz
+            indeksSoal = 0;
+            skor = 0;
+            document.getElementById("opsiA").style.display = "";
+            document.getElementById("opsiB").style.display = "";
+            document.getElementById("opsiC").style.display = "";
+            tampilkanSoal();
+        }
+    }
+</script>
+</body>
+</html>

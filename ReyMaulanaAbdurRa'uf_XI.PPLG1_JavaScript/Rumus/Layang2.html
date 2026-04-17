@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Menggambar Layang-layang</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .container {
+      position: relative;
+      display: inline-block;
+      margin: 20px auto;
+    }
+
+    canvas {
+      border: 1px solid #444;
+      background: #fff;
+    }
+
+    .input-d1 {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .input-d2 {
+      position: absolute;
+      top: 50%;
+      left: -120px;
+      transform: translateY(-50%);
+    }
+
+    input[type="text"] {
+      padding: 5px;
+      width: 100px;
+      text-align: center;
+      border: 1px solid #bbb;
+      border-radius: 5px;
+    }
+
+    .btn-group {
+      margin-top: 20px;
+    }
+
+    input[type="button"] {
+      margin: 5px;
+      padding: 7px 15px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    input[type="button"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Menghitung Luas & Keliling Layang-layang</h2>
+
+  <div class="container">
+    <canvas id="myCanvas" width="400" height="300"></canvas>
+
+    <input type="text" id="d1" class="input-d1" placeholder="Diagonal 1">
+    <input type="text" id="d2" class="input-d2" placeholder="Diagonal 2">
+  </div>
+
+  <div class="btn-group">
+    <input type="button" value="Hitung & Gambar" onclick="hitungDanGambar()">
+  </div>
+
+  <script>
+    function hitungDanGambar() {
+      var d1 = parseFloat(document.getElementById("d1").value);
+      var d2 = parseFloat(document.getElementById("d2").value);
+
+      if (isNaN(d1) || isNaN(d2)) {
+        alert("Isi diagonal 1 dan diagonal 2 dengan angka!");
+        return;
+      }
+
+      var luas = 0.5 * d1 * d2;
+
+      var sisi1 = Math.sqrt(Math.pow(d1/2, 2) + Math.pow(d2/2, 2));
+      var keliling = 4 * sisi1;
+
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      var scale = Math.min((canvas.width - 40) / d1, (canvas.height - 40) / d2);
+
+      var halfD1 = (d1 * scale) / 2;
+      var halfD2 = (d2 * scale) / 2;
+
+      var centerX = canvas.width / 2;
+      var centerY = canvas.height / 2;
+
+      var p1 = {x: centerX, y: centerY - halfD2};
+      var p2 = {x: centerX + halfD1, y: centerY};
+      var p3 = {x: centerX, y: centerY + halfD2};
+      var p4 = {x: centerX - halfD1, y: centerY};
+
+      ctx.fillStyle = "#007BFF";
+      ctx.beginPath();
+      ctx.moveTo(p1.x, p1.y);
+      ctx.lineTo(p2.x, p2.y);
+      ctx.lineTo(p3.x, p3.y);
+      ctx.lineTo(p4.x, p4.y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Luas: " + luas.toFixed(2), centerX, centerY - 10);
+      ctx.fillText("Keliling: " + keliling.toFixed(2), centerX, centerY + 20);
+    }
+  </script>
+</body>
+</html>
